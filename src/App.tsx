@@ -2,7 +2,49 @@ import { useEffect, useRef, useState } from 'react';
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const galaxyContainerRef = useRef<HTMLDivElement>(null);
   const [showMessages, setShowMessages] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = window.innerWidth <= 768 || 
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+      
+      // Prevenir zoom y movimiento en móvil
+      if (isMobileDevice) {
+        document.addEventListener('touchmove', (e) => {
+          if (!(e.target as Element).closest('.love-letter')) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+        
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
+        document.addEventListener('gesturechange', (e) => e.preventDefault());
+        
+        // Prevenir zoom con doble tap excepto en la carta
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+          const now = new Date().getTime();
+          if (now - lastTouchEnd <= 300) {
+            if (!(e.target as Element).closest('.love-letter')) {
+              e.preventDefault();
+            }
+          }
+          lastTouchEnd = now;
+        }, false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   useEffect(() => {
     if (!showMessages) return;
@@ -30,7 +72,8 @@ function App() {
     const emojis = ["🌻", "🌹", "🌷", "🥰", "😍", "😘", "💕", "💖", "✨", "🌸"];
     const images = ["/Andy1.jpg", "/Andy2.jpg", "/Flores.jpg"];
 
-    const messageCount = 35;
+    // Ajustar número de mensajes según el dispositivo
+    const messageCount = isMobile ? 20 : 35;
 
     for (let i = 0; i < messageCount; i++) {
       const randomType = Math.random();
@@ -67,7 +110,10 @@ function App() {
   }, [showMessages]);
 
   return (
-    <div className="galaxy-container">
+    <div 
+      ref={galaxyContainerRef}
+      className={`galaxy-container ${isMobile ? 'mobile-fixed' : ''}`}
+    >
       <div className="header">
         <span>Html</span>
         <span className="heart-icon">❤️</span>

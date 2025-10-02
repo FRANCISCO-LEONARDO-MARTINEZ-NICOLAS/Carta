@@ -31,18 +31,103 @@ body {
     130px 270px,
     70px 100px;
   font-family: 'Courier New', Courier, monospace;
+  background-attachment: fixed;
+}
+
+/* Prevenir movimiento de fondo en móvil */
+@media (max-width: 768px) {
+  body {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .galaxy-container {
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
 .animation-container {
   position: relative;
   width: 100vw;
   height: 100vh;
+  pointer-events: none;
+}
+
+/* Clase especial para móvil que previene movimiento */
+.galaxy-container.mobile-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+/* Los elementos flotantes no deben interferir con el touch */
+.floating-item {
+  pointer-events: none;
+}
+
+/* Solo la carta debe ser interactuable en móvil */
+.code-snippet {
+  pointer-events: auto;
+}
+
+/* Estilos adicionales para mejorar la experiencia móvil */
+@media (max-width: 768px) {
+  /* Suavizar transiciones y animaciones */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+  }
+  
+  /* Optimizar el renderizado */
+  .floating-item, .emoji-item, .image-item {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Hacer el fondo más estable en móvil */
+  body {
+    -webkit-overflow-scrolling: auto;
+  }
+  
+  /* Mejorar la legibilidad en móvil */
+  .love-letter .string {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Botón con mejor feedback táctil */
+  .message-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Asegurar que el contenido se ajuste bien */
+  .galaxy-container.mobile-fixed {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
+  /* Prevenir selección accidental de texto */
+  .header, .floating-item, .emoji-item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 .floating-item {
@@ -254,36 +339,142 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Elementos flotantes más pequeños y suaves */
   .floating-item {
-    font-size: 1em;
-    padding: 6px 12px;
+    font-size: 0.9em;
+    padding: 5px 10px;
+    border-radius: 12px;
   }
 
   .emoji-item {
-    font-size: 1.5em;
+    font-size: 1.4em;
+    padding: 3px;
   }
 
   .floating-image {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border-width: 2px;
   }
 
+  /* Header más compacto */
   .header {
-    font-size: 1.2em;
-    gap: 15px;
+    font-size: 1.1em;
+    gap: 12px;
+    top: 15px;
+    padding: 0 10px;
   }
 
+  /* Caja de código optimizada para móvil */
   .code-snippet {
-    padding: 15px;
-    font-size: 0.85em;
-    max-height: 80vh;
+    padding: 12px;
+    font-size: 0.8em;
+    max-height: 85vh;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    max-width: calc(100% - 10px);
+    transform: none;
+    border-radius: 10px;
   }
 
+  /* Carta de amor con scroll mejorado */
   .love-letter {
-    max-height: 60vh;
+    max-height: 65vh;
+    padding-right: 8px;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
   }
 
   .love-letter .string {
+    font-size: 0.75em;
+    line-height: 1.5;
+  }
+
+  /* Botón más grande y accesible */
+  .message-button {
+    padding: 15px 35px;
+    font-size: 1em;
+    border-radius: 20px;
+    touch-action: manipulation;
+  }
+
+  /* Scroll bar más visible en móvil */
+  .love-letter::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .love-letter::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Animaciones suaves para móvil */
+  .floating-item {
+    animation-duration: calc(var(--duration) * 1.2);
+  }
+  
+  /* Prevenir zoom accidental */
+  .code-snippet,
+  .love-letter,
+  .message-button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Permitir selección solo en el texto de la carta */
+  .love-letter .string {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Ajustes adicionales para móviles muy pequeños */
+@media (max-width: 480px) {
+  .header {
+    font-size: 1em;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .code-snippet {
+    padding: 10px;
+    font-size: 0.75em;
+    bottom: 5px;
+    left: 2px;
+    right: 2px;
+    max-width: calc(100% - 4px);
+  }
+
+  .love-letter {
+    max-height: 70vh;
+  }
+
+  .love-letter .string {
+    font-size: 0.7em;
+  }
+
+  .floating-item {
     font-size: 0.8em;
+    padding: 4px 8px;
+  }
+
+  .emoji-item {
+    font-size: 1.2em;
+  }
+
+  .floating-image {
+    width: 35px;
+    height: 35px;
   }
 }
