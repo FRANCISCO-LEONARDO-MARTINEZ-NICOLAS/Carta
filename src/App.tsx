@@ -115,11 +115,11 @@ function App() {
       className={`galaxy-container ${isMobile ? 'mobile-fixed' : ''}`}
     >
       <div className="header">
-        <span>Html</span>
+        <span>TE AMO</span>
         <span className="heart-icon">❤️</span>
-        <span>Css</span>
+        <span>ANDREA</span>
         <span className="heart-icon">💕</span>
-        <span>Js</span>
+        <span></span>
       </div>
 
       <div ref={containerRef} className="animation-container"></div>
